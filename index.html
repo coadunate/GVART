@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="css/graph-creator.css" />
+    <link rel="stylesheet" href="src/SlickGrid-master/slick.grid.css" />
+    <link rel="stylesheet" href="src/jQuery/jquery-ui-1.11.4.custom/jquery-ui.css" />
+
+  </head>
+
+  <body>
+
+    <!-- SlickGrid Dependencies -->
+    <script src="src/jQuery/jQuery-1.11.3.js"></script>
+    <script src="src/jQuery/jquery.event.drag-2.2.js"></script>
+    <script src="src/jQuery/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+
+
+    <script src="src/SlickGrid-master/slick.core.js"></script>
+    <script src="src/SlickGrid-master/slick.grid.js"></script>
+    <script src="src/SlickGrid-master/plugins/slick.rowselectionmodel.js"></script>
+
+    <!-- Panel for viewing the current graph -->
+		<script type="text/javascript">
+			function getURLParameter(name){
+				  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+			}
+
+			function loadJS(file) {
+				var jsElm = document.createElement("script");
+				//jsElm.setAttribute("type", "text/javascript");
+				jsElm.setAttribute("src", "data/" + file);
+				document.getElementById("tr-load").appendChild(jsElm);
+				var gc = document.createElement("script");
+				gc.setAttribute("src", "graph-creator.js");
+				document.getElementById("tr-load").appendChild(gc);
+			}
+		</script>
+
+    <form>
+			<br>
+			Graph:
+      <input name="TR" type="text" list="TRList" id="TRSelect">
+			<datalist id='TRList'></datalist>
+			<button onclick="loadJS(document.getElementById('TRSelect').value);">Go!</button>
+    </form>
+		<!-- Import the list of TRs and set up the selection list -->
+		<script src="data/trlist.js"></script>
+
+    <div id="graph-view" style="height: 250px;">
+      <script src="src/d3/d3.v3.js" charset="utf-8"></script>
+    </div>
+
+		<script type="text/javascript">
+			var sel = document.getElementById('TRList');
+			var curr = getURLParameter('TR');
+			for(var i = 0; i < trlist.length; i++) {
+				var opt = document.createElement('option');
+				opt.innerHTML = trlist[i];
+				opt.value = trlist[i];
+				sel.appendChild(opt);
+
+				//display current TR being shown
+				document.getElementById('graph-view').innerHTML = getURLParameter('TR');
+			}
+		</script>
+
+    <div id="graph-options" class="options" style="font-family:Heveltica Neue Arial sans serif;font-size:16px;width:100%;">
+      Enable Animations:
+      <input type="checkbox" id="show-animations" checked>
+    </div>
+
+    <!-- Transcript list Slick Grid -->
+    <div id="trans-table" style="height:300px;">
+    </div>
+
+    <div id="seq-options" class="options" style="font-family:Heveltica Neue Arial sans serif;font-size:16px;width:100%;">
+      Reading Frame:
+      <select id="frame-select">
+        <option value="1">Forward 1</option>
+        <option value="2">Forward 2</option>
+        <option value="3">Forward 3</option>
+        <option value="4">Reverse 1</option>
+        <option value="5">Reverse 2</option>
+        <option value="6">Reverse 3</option>
+      </select>
+      <br>
+      Open Reading Frames:
+      <input type="checkbox" id="show-orfs" checked>
+      <br>
+      Display Sequence View:
+      <input type="checkbox" id="display-seq" unchecked>
+      (disable for improved graph performance)
+    </div>
+    <!-- The panel for viewing the selected sequence -->
+    <script src="src/biojs-vis-sequence.js"></script>
+    <div id="seq-view" style="height 300px;">
+      <text></text>
+    </div>
+
+		<div id="tr-load" ></div>
+		<script type="text/javascript">
+			loadJS(getURLParameter('TR'));
+		</script>
+
+  </body>
+
+</html>
